@@ -1,6 +1,8 @@
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-import menu, show
+from menu import Menu
+from show_ import Show
 
 class Button(QToolButton):
 
@@ -29,9 +31,14 @@ class ComponentSearch(QWidget):
 
         self.searchEdit = QLineEdit()
         self.consolEdit = QTextEdit()
-        self.pictureEdit = QTextEdit()
+        self.consolEdit.setReadOnly(True)
+        self.pictureEdit = QLabel()
 
-        #picture = QPixmap()
+        self.pixmap = QPixmap()
+        self.pixmap.load('default.jpg')
+        self.name = 'default.jpg'
+        self.picture = self.pixmap.scaled(400, 400)
+        self.pictureEdit.setPixmap(self.picture)
 
         # Grid Creation and Placement
         pictureLayout = QGridLayout()
@@ -60,18 +67,52 @@ class ComponentSearch(QWidget):
 
         self.setWindowTitle("Allergy Component Checker")
 
+        self.startCheck()
+
+    def startCheck(self):
+        self.menu = Menu()
+        self.show_ = Show()
+
     def buttonClicked(self):
+        component = self.searchEdit.text()
         button = self.sender()
         key = button.text()
 
         if key == 'Search':
             try:
-                if self.searchEdit.text() in menu.components_list:
-                    result = show.showConsol(self.searchEdit.text())
-                    self.consolEdit.setText(result)
+                result = ''
+                if component in self.menu.components_list:
+                    self.name_result, self.comp_result = self.show_.showConsol(component)
+                    result += "해당 성분이 포함된 음식" + "\n" * 2
+                    for a in range(len(self.name_result)):
+                        result += (self.name_result[a] + " : ")
+                        for b in self.comp_result[a]:
+                            result += b + ", "
+                        result += "\n" * 2
+                self.consolEdit.setText(str(result))
             except:
-                QMessageBox.warning(self, '해당 성분을 포함한 음식이 존재하지 않음', "입력을 초기화 합니다.")
+                QMessageBox.warning(self, "입력을 초기화 합니다.", '해당 성분을 포함한 음식이 존재하지 않습니다.')
                 self.searchEdit.setText('')
+        elif key == '<-':
+            self.imgNames = [ '1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', 'default.jpg' ]
+            for i in range(len(self.imgNames)):
+                if self.name == self.imgNames[i]:
+                    previous_file_name = self.imgNames[0 if len(self.imgNames) - 1 == i else i + 1]
+                    self.pixmap.load(previous_file_name)
+                    self.picture = self.pixmap.scaled(400, 400)
+                    self.pictureEdit.setPixmap(self.picture)
+                    self.name = previous_file_name
+                    break
+        elif key == '->':
+            self.imgNames = [ 'default.jpg', '1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif' ]
+            for i in range(len(self.imgNames)):
+                if self.name == self.imgNames[i]:
+                    next_file_name = self.imgNames[0 if len(self.imgNames) - 1 == i else i + 1]
+                    self.pixmap.load(next_file_name)
+                    self.picture = self.pixmap.scaled(400, 400)
+                    self.pictureEdit.setPixmap(self.picture)
+                    self.name = next_file_name
+                    break
         elif key == 'C':
             self.searchEdit.setText('')
 
