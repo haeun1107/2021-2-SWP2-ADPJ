@@ -1,4 +1,3 @@
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
 import menu, show
@@ -21,11 +20,6 @@ class ComponentSearch(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-
-        # Display Window
-        self.display = QLineEdit()
-        self.display.setReadOnly(True)
-        self.display.setAlignment(Qt.AlignRight)
 
         # Buttons and Edit
         self.searchButton = Button('Search', self.buttonClicked)
@@ -72,13 +66,14 @@ class ComponentSearch(QWidget):
 
         if key == 'Search':
             try:
-                result = show.showConsol(self.display.text())
-                self.consolEdit.setText(result)
+                if self.searchEdit.text() in menu.components_list:
+                    result = show.showConsol(self.searchEdit.text())
+                    self.consolEdit.setText(result)
             except:
                 QMessageBox.warning(self, '해당 성분을 포함한 음식이 존재하지 않음', "입력을 초기화 합니다.")
-                self.display.setText('')
+                self.searchEdit.setText('')
         elif key == 'C':
-            self.display.setText('')
+            self.searchEdit.setText('')
 
 
 if __name__ == '__main__':

@@ -24,5 +24,6 @@ for j in range(len(food_value)):
 components_set = set(components_list)
 components_list = list(components_set)
 
-
+#사전순 정렬
+components_list.sort()
 
