@@ -12,12 +12,6 @@ class Button(QToolButton):
         self.setText(text)
         self.clicked.connect(callback)
 
-    def sizeHint(self):
-        size = super(Button, self).sizeHint()
-        size.setHeight(size.height() +5)
-        size.setWidth(max(size.width(), size.height()))
-        return size
-
 class ComponentSearch(QWidget):
 
     def __init__(self, parent=None):
@@ -75,8 +69,7 @@ class ComponentSearch(QWidget):
 
     def buttonClicked(self):
         component = self.searchEdit.text()
-        button = self.sender()
-        key = button.text()
+        key = self.sender().text()
 
         if key == 'Search':
             try:
@@ -89,6 +82,8 @@ class ComponentSearch(QWidget):
                         for b in self.comp_result[a]:
                             result += b + ", "
                         result += "\n" * 2
+                else:
+                    raise
                 self.consolEdit.setText(str(result))
             except:
                 QMessageBox.warning(self, "입력을 초기화 합니다.", '해당 성분을 포함한 음식이 존재하지 않습니다.')
