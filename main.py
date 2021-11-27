@@ -94,7 +94,7 @@ class ComponentSearch(QWidget):
                 QMessageBox.warning(self, "입력을 초기화 합니다.", '해당 성분을 포함한 음식이 존재하지 않습니다.')
                 self.searchEdit.setText('')
         elif key == '<-':
-            self.imgNames = [ '1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', 'default.jpg' ]
+            self.imgNames = [ '5.jfif', '4.jfif', '3.jfif', '2.jfif', '1.jfif', 'default.jpg' ]
             for i in range(len(self.imgNames)):
                 if self.name == self.imgNames[i]:
                     previous_file_name = self.imgNames[0 if len(self.imgNames) - 1 == i else i + 1]
